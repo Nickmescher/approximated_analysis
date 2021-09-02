@@ -13,6 +13,8 @@ fig = make_subplots(rows=3, cols=1)
 cf.go_offline()
 fig2 = go.Figure()
 fig2 = make_subplots(rows=1, cols=1)
+fig3 = go.Figure()
+fig3 = make_subplots(rows=2, cols=1)
 
 p = pd.read_csv(r"C:\Users\Skytech2028\Desktop\\nick\boreholeAnalisys\501.csv", encoding='utf8', sep=';',
                 decimal=',', parse_dates=['Время (UTC)'])
@@ -20,23 +22,23 @@ p = pd.read_csv(r"C:\Users\Skytech2028\Desktop\\nick\boreholeAnalisys\501.csv", 
 for n in enumerate(p['Скв501_Скв501.%откр']):
     n = list(n)
     if n[1] <= 0:
-        p['Скв501_Скв501.%откр'][n[0]] = p['Скв501_Скв501.%откр'][n[0]-1]
+        p['Скв501_Скв501.%откр'][n[0]] = p['Скв501_Скв501.%откр'][n[0] - 1]
     print(n)
 
 for n in enumerate(p['Скв501_Скв501.Qгаз']):
     n = list(n)
     if n[1] <= 0:
-        p['Скв501_Скв501.Qгаз'][n[0]] = p['Скв501_Скв501.Qгаз'][n[0]-1]
+        p['Скв501_Скв501.Qгаз'][n[0]] = p['Скв501_Скв501.Qгаз'][n[0] - 1]
     print(n)
-
-p['diff'] = p['Скв501_Скв501.Qгаз'].diff()
 
 fig2 = px.scatter(x=p["Время (UTC)"],
                   y=p["Скв501_Скв501.Qгаз"],
                   trendline="rolling", trendline_options=dict(function="median", window=100))
 
+p['diff'] = p['Скв501_Скв501.Qгаз'].diff()
 p['diff2'] = fig2.data[1].y
 p['diff2'] = p['diff2'].diff()
+p['diff3'] = p['Скв501_Скв501.%откр'].diff()
 
 fig.append_trace(go.Scatter(
     x=p["Время (UTC)"],
@@ -58,13 +60,27 @@ fig.append_trace(go.Scatter(
 
 fig.update_layout(title_text="Скважина 501")
 
-p["time"] = p["Время (UTC)"]
 
-fig3 = px.line(x=p["Время (UTC)"],
-               y=p["diff2"], )
+fig3.append_trace(go.Scatter(
+    x=p["Время (UTC)"],
+    y=p["diff3"],
+    name='PercentageDiff',
+), row=1, col=1)
+
+fig3.append_trace(go.Scatter(
+    x=p["Время (UTC)"],
+    y=p["diff2"],
+    name='ApproxedDiff',
+), row=2, col=1)
 
 fig.show()
 fig2.show()
 fig3.show()
+
+# d = preprocessing.normalize(p, axis=0)
+#
+# scaled_df = pd.DataFrame(d, columns='Время')
+# scaled_df.head()
+
 print(p["diff2"])
-print()
+print(d)
