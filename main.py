@@ -17,18 +17,23 @@ fig2 = make_subplots(rows=1, cols=1)
 p = pd.read_csv(r"C:\Users\Skytech2028\Desktop\\nick\boreholeAnalisys\501.csv", encoding='utf8', sep=';',
                 decimal=',', parse_dates=['Время (UTC)'])
 
-for n in p['Скв501_Скв501.%откр']:
-    
+for n in enumerate(p['Скв501_Скв501.%откр']):
+    n = list(n)
+    if n[1] <= 0:
+        p['Скв501_Скв501.%откр'][n[0]] = p['Скв501_Скв501.%откр'][n[0]-1]
+    print(n)
 
-
+for n in enumerate(p['Скв501_Скв501.Qгаз']):
+    n = list(n)
+    if n[1] <= 0:
+        p['Скв501_Скв501.Qгаз'][n[0]] = p['Скв501_Скв501.Qгаз'][n[0]-1]
+    print(n)
 
 p['diff'] = p['Скв501_Скв501.Qгаз'].diff()
 
 fig2 = px.scatter(x=p["Время (UTC)"],
                   y=p["Скв501_Скв501.Qгаз"],
                   trendline="rolling", trendline_options=dict(function="median", window=100))
-
-# d = preprocessing.normalize(p["Скв501_Скв501.%откр"], axis=0)
 
 p['diff2'] = fig2.data[1].y
 p['diff2'] = p['diff2'].diff()
@@ -62,7 +67,4 @@ fig.show()
 fig2.show()
 fig3.show()
 print(p["diff2"])
-print(p["diff2"])
-print()
-
 print()
