@@ -1,4 +1,5 @@
 import pandas as pd
+import algorythm as alg
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 import plotly.express as px
@@ -23,12 +24,10 @@ tempdf = pd.DataFrame()
 for n in enumerate(p['Скв501_Скв501.%откр']):
     if n[1] <= 0 or n[1] > 100:
         p['Скв501_Скв501.%откр'][n[0]] = p['Скв501_Скв501.%откр'][n[0] - 1]
-    print(n)
 
 for n in enumerate(p['Скв501_Скв501.Qгаз']):
     if n[1] <= 0 or n[1] > 100:
         p['Скв501_Скв501.Qгаз'][n[0]] = p['Скв501_Скв501.Qгаз'][n[0] - 1]
-    print(n)
 
 fig2 = px.scatter(x=p["Время (UTC)"],
                   y=p["Скв501_Скв501.Qгаз"],
@@ -103,8 +102,13 @@ fig2.update_layout(title_text="Скважина 501")
 fig3.update_layout(title_text="Скважина 501")
 
 # fig.show()
-fig3.show()
+# fig3.show()
 
-print(df)
-print(df_scaled)
+print(len(normalized_df["Perc_Diff"]))
+for n in enumerate(normalized_df['Perc_Diff']):
+    print(reversed(n))
+
+# print((normalized_df["Q"][1]- normalized_df["Q"][0]))
+# print(alg.algorythm())
+
 print()
