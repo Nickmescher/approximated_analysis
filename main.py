@@ -41,7 +41,6 @@ tempdf['Qnew'] = fig2.data[1].y
 tempdf.drop(tempdf.index[1:50], inplace=True)
 tempdf.reset_index(inplace=True)
 
-
 p['Qnew'] = tempdf['Qnew']
 p['diff2'] = p['Qnew'].diff()
 p['diff3'] = p['Скв501_Скв501.%откр'].diff()
@@ -103,7 +102,7 @@ fig.update_layout(title_text="Скважина 501")
 fig2.update_layout(title_text="Скважина 501")
 fig3.update_layout(title_text="Скважина 501")
 
-fig.show()
+# fig.show()
 fig3.show()
 
 print(df)
