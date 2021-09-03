@@ -88,14 +88,14 @@ fig3.append_trace(go.Scatter(
 
 fig3.append_trace(go.Scatter(
     x=p['Время (UTC)'],
-    y=normalized_df['Q_Diff'],
-    name='Q_Diff'
+    y=normalized_df['Perc_Diff'],
+    name='Perc_Diff'
 ), row=2, col=1)
 
 fig3.append_trace(go.Scatter(
     x=p['Время (UTC)'],
-    y=normalized_df['Perc_Diff'],
-    name='Perc_Diff'
+    y=normalized_df['Q_Diff'],
+    name='Q_Diff'
 ), row=2, col=1)
 
 fig.update_layout(title_text="Скважина 501")
