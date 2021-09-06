@@ -133,6 +133,8 @@ fig3.update_layout(title_text="Скважина 501")
 fig.show()
 fig3.show()
 
+alg.algorythm()
+
 print(len(normalized_df["Perc_Diff"]))
 
 quan = len(normalized_df["Perc_Diff"]) - 1
