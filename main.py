@@ -126,9 +126,6 @@ fig.show()
 fig3.show()
 # print(len(normalized_df["Perc_Diff"]))
 
-indices
-print(indices[::-1])
-
 quan = len(normalized_df["Perc_Diff"]) - 1
 
 print(alg.algorythm(normalized_df, indices))
