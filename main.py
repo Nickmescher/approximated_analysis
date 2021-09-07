@@ -6,19 +6,20 @@ import plotly.express as px
 import cufflinks as cf
 import numpy as np
 from scipy.signal import find_peaks
-from sklearn.preprocessing import MinMaxScaler
+
+# df.drop(df.index[1:50], inplace=True) на случай если нужно будет удалить
+# df.reset_index(inplace=True)
 
 fig = go.Figure()
 fig = make_subplots(rows=3, cols=1)
 fig2 = go.Figure()
 fig2 = make_subplots(rows=1, cols=1)
 fig3 = go.Figure()
-fig3 = make_subplots(rows=2, cols=1)
+fig3 = make_subplots(rows=2, cols=1)  # создание графиков
 
 p = pd.read_csv(r"C:\Users\Skytech2028\Desktop\\nick\boreholeAnalisys\501.csv", encoding='utf8', sep=';',
                 decimal=',', parse_dates=['Время (UTC)'],
                 usecols=['Время (UTC)', 'Скв501_Скв501.%откр', 'Скв501_Скв501.Qгаз'])
-tempdf = pd.DataFrame()
 
 for n in enumerate(p['Скв501_Скв501.%откр']):
     if n[1] <= 0 or n[1] > 100:
@@ -33,28 +34,19 @@ fig2 = px.scatter(x=p["Время (UTC)"],
                   trendline="rolling", trendline_options=dict(function="median", window=100),
                   trendline_color_override="red")
 
-p['diff'] = p['Скв501_Скв501.Qгаз'].diff()
-tempdf['Qnew'] = fig2.data[1].y
+p['Q_diff'] = p['Скв501_Скв501.Qгаз'].diff()
+p['Q_approx'] = fig2.data[1].y
+p['Q_DiffApproxed'] = p['Q_approx'].diff()
+p['Perc_Diff'] = p['Скв501_Скв501.%откр'].diff()
 
-tempdf.drop(tempdf.index[1:50], inplace=True)
-tempdf.reset_index(inplace=True)
+normalized_df = pd.DataFrame({'Q_approx': p['Q_approx'],
+                              'Perc': p['Скв501_Скв501.%откр'],
+                              'Q_DiffApproxed': p['Q_DiffApproxed'],
+                              'Perc_Diff': p['Perc_Diff'],
+                              "Q_OrigDiff": p['Q_diff'],
+                              'Q_Orig': p['Скв501_Скв501.Qгаз']})
 
-p['Qnew'] = tempdf['Qnew']
-p['diff2'] = p['Qnew'].diff()
-p['diff3'] = p['Скв501_Скв501.%откр'].diff()
-
-df = pd.DataFrame({'Q': p['Qnew'],
-                   'Perc': p['Скв501_Скв501.%откр'],
-                   'Q_Diff': p['diff2'],
-                   'Perc_Diff': p['diff3']})
-
-normalized_df = (df - df.mean()) / df.std()
-
-del df["Q_Diff"]
-
-df["Q_OrigDiff"] = p['diff']
-
-df_origin = (df - df.mean()) / df.std()
+normalized_df = (normalized_df - normalized_df.mean()) / normalized_df.std()
 
 normalized_df["percForPeaks"] = 0
 
@@ -80,7 +72,7 @@ fig.append_trace(go.Scatter(
     x=fig2.data[1].x,
     y=fig2.data[1].y,
     name="approximated",
-), row=3, col=1)
+), row=3, col=1)  # fig
 
 fig3.append_trace(go.Scatter(
     x=p['Время (UTC)'],
@@ -90,7 +82,7 @@ fig3.append_trace(go.Scatter(
 
 fig3.append_trace(go.Scatter(
     x=p['Время (UTC)'],
-    y=normalized_df['Q'],
+    y=normalized_df['Q_approx'],
     name='Q'
 ), row=1, col=1)
 
@@ -108,9 +100,9 @@ fig3.append_trace(go.Scatter(
 
 fig3.append_trace(go.Scatter(
     x=p['Время (UTC)'],
-    y=df_origin['Q_OrigDiff'],
+    y=normalized_df['Q_OrigDiff'],
     name='Q_Diff'
-), row=2, col=1)
+), row=2, col=1)  # fig3
 
 indices = find_peaks(normalized_df["percForPeaks"], threshold=1.15)[0]
 
@@ -124,7 +116,7 @@ fig3.append_trace(go.Scatter(
         symbol='cross'
     ),
     name='Detected Peaks'
-), row=2, col=1)
+), row=2, col=1)  # fig3 + peaks
 
 fig.update_layout(title_text="Скважина 501")
 fig2.update_layout(title_text="Скважина 501")
@@ -132,13 +124,13 @@ fig3.update_layout(title_text="Скважина 501")
 
 fig.show()
 fig3.show()
+# print(len(normalized_df["Perc_Diff"]))
 
-alg.algorythm()
-
-print(len(normalized_df["Perc_Diff"]))
+indices
+print(indices[::-1])
 
 quan = len(normalized_df["Perc_Diff"]) - 1
 
-print(alg.algorythm(normalized_df))
+print(alg.algorythm(normalized_df, indices))
 
 print()
