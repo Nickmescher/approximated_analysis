@@ -126,8 +126,11 @@ fig.show()
 fig3.show()
 # print(len(normalized_df["Perc_Diff"]))
 
+normalized_df["Time"]=p['Время (UTC)']
+
 quan = len(normalized_df["Perc_Diff"]) - 1
 
-print(alg.algorythm(normalized_df, indices))
+answers = alg.algorythm(normalized_df, indices)
+print(answers)
 
 print()
