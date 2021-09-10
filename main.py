@@ -126,11 +126,17 @@ fig.show()
 fig3.show()
 # print(len(normalized_df["Perc_Diff"]))
 
-normalized_df["Time"]=p['Время (UTC)']
+normalized_df["Time"] = p['Время (UTC)']
 
 quan = len(normalized_df["Perc_Diff"]) - 1
 
+for n in enumerate(indices[::-1]):
+    percs = p['Скв501_Скв501.%откр'][n[1]]
+    print(percs)
+
 answers = alg.algorythm(normalized_df, indices)
 print(answers)
+
+# alg.comparing(indices[::-1], answers, percs)
 
 print()
