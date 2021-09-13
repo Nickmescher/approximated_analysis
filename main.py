@@ -125,8 +125,8 @@ fig.update_layout(title_text="Скважина 501")
 fig2.update_layout(title_text="Скважина 501")
 fig3.update_layout(title_text="Скважина 501")
 
-# fig.show()
-# fig3.show()
+fig.show()
+fig3.show()
 
 normalized_df["Time"] = p['Время (UTC)']
 
