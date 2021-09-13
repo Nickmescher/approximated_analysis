@@ -3,6 +3,7 @@ import algorythm as alg
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 import plotly.express as px
+import os
 import cufflinks as cf
 import numpy as np
 from scipy.signal import find_peaks
@@ -14,6 +15,8 @@ fig = go.Figure()
 fig = make_subplots(rows=3, cols=1)
 fig2 = go.Figure()
 fig2 = make_subplots(rows=1, cols=1)
+fig4 = go.Figure()
+fig4 = make_subplots(rows=1, cols=1)
 fig3 = go.Figure()
 fig3 = make_subplots(rows=2, cols=1)  # создание графиков
 
@@ -122,21 +125,49 @@ fig.update_layout(title_text="Скважина 501")
 fig2.update_layout(title_text="Скважина 501")
 fig3.update_layout(title_text="Скважина 501")
 
-fig.show()
-fig3.show()
-# print(len(normalized_df["Perc_Diff"]))
+# fig.show()
+# fig3.show()
 
 normalized_df["Time"] = p['Время (UTC)']
 
 quan = len(normalized_df["Perc_Diff"]) - 1
 
+percs = []
+
 for n in enumerate(indices[::-1]):
-    percs = p['Скв501_Скв501.%откр'][n[1]]
+    percs.append(p['Скв501_Скв501.%откр'][n[1]])
     print(percs)
 
 answers = alg.algorythm(normalized_df, indices)
 print(answers)
 
-# alg.comparing(indices[::-1], answers, percs)
+endanswer = alg.comparing(indices[::-1], answers, percs)
+
+fig4.append_trace(go.Scatter(
+    x=p['Время (UTC)'][endanswer - 50:endanswer + 50],
+    y=normalized_df['Perc'][endanswer - 50:endanswer + 50],
+    name='Percentage'
+), row=1, col=1)
+
+fig4.append_trace(go.Scatter(
+    x=p['Время (UTC)'][endanswer - 50:endanswer + 50],
+    y=normalized_df['Q_approx'][endanswer - 50:endanswer + 50],
+    name='Q'
+), row=1, col=1)
+# fig4
+
+if not os.path.exists("images"):
+    os.mkdir("images")
+titleans = "Процент отсутствия отдачи "
+dateans = p["Время (UTC)"][endanswer]
+percans = p["Скв501_Скв501.%откр"][endanswer]
+titleans += str(dateans)
+titleans += " "
+titleans += str(percans)
+print(titleans)
+
+fig4.update_layout(title_text=titleans)
+fig4.show()
+fig4.write_image("images/answer.pdf")
 
 print()
