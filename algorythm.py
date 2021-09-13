@@ -22,7 +22,6 @@ def algorythm(df, indices):
                 answers.append(n[1])
     return answers
 
-
 def comparing(allInd, rightInd, percs):
     diffInd = list(set(allInd) - set(rightInd))
     return max(diffInd)
