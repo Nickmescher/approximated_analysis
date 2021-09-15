@@ -50,16 +50,10 @@ p["Perc_Approxed_Diff"] = p["Perc_Approxed"].diff()
 p["Char_Approxed"] = p["Скв501_Скв501.Qгаз"].rolling(100).mean()
 p["Char_Approxed_Diff"] = p["Char_Approxed"].diff()
 
-# fig5 = px.scatter(x=p["Время (UTC)"],
-#                   y=p["Скв501_Скв501.%откр"],
-#                   trendline="rolling", trendline_options=dict(function="median", window=100),
-#                   trendline_color_override="red")
-
 p['Q_diff'] = p['Скв501_Скв501.Qгаз'].diff()
 p['Q_approx'] = fig2.data[1].y
 p['Q_DiffApproxed'] = p['Q_approx'].diff()
 p['Perc_Diff'] = p['Скв501_Скв501.%откр'].diff()
-# p['Perc_Approxed'] = fig5.data[1].y
 
 normalized_df = pd.DataFrame({'Q_approx': p['Q_approx'],
                               'Perc': p['Скв501_Скв501.%откр'],
